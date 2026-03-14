@@ -1,0 +1,10 @@
+
+POST http://localhost:3000/process-payment
+Content-Type: application/json
+Idempotency-Key: order129
+
+{
+  "amount": 100,
+  "currency": "GHS",
+  "user": "ernest"
+}
