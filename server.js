@@ -1,12 +1,13 @@
 require('dotenv').config();
 const express = require("express");
+const idempotency = require("./middleware/idempotency");
 const { processPayment } = require("./paymentService");
 
 const app = express();
 app.use(express.json());
 
-// Payment endpoint
-app.post("/process-payment", async (req, res) => {
+//Simulated Payment endpoint
+app.post("/process-payment", idempotency, async (req, res) => {
   const { amount, currency, user } = req.body;
 
   try {

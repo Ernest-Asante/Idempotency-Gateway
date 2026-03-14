@@ -1,10 +1,62 @@
 
+### First Request - Happy Path
 POST http://localhost:3000/process-payment
 Content-Type: application/json
-Idempotency-Key: order129
+Idempotency-Key: order120
 
 {
   "amount": 100,
   "currency": "GHS",
   "user": "ernest"
 }
+
+
+### Second Request - Retry same key
+POST http://localhost:3000/process-payment
+Content-Type: application/json
+Idempotency-Key: order120
+
+{
+  "amount": 100,
+  "currency": "GHS",
+  "user": "ernest"
+}
+
+
+### Third Request - Conflict (same key, different body)
+POST http://localhost:3000/process-payment
+Content-Type: application/json
+Idempotency-Key: order124
+
+{
+  "amount": 500,
+  "currency": "GHS",
+  "user": "ernest"
+}
+
+
+### Fourth Request - New key (new payment)
+POST http://localhost:3000/process-payment
+Content-Type: application/json
+Idempotency-Key: order125
+
+{
+  "amount": 200,
+  "currency": "GHS",
+  "user": "ernest"
+}
+
+
+### Fifth Request - Rate limit test (same key repeated 6 times quickly)
+
+# Repeat this request 6 times with the same Idempotency-Key
+POST http://localhost:3000/process-payment
+Content-Type: application/json
+Idempotency-Key: order124
+
+{
+  "amount": 500,
+  "currency": "GHS",
+  "user": "ernest"
+}
+
